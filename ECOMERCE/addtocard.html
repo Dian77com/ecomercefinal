@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .cart {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+        .cart-item img {
+            width: 50px;
+            height: auto;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .cart-item p {
+            margin: 0;
+        }
+        #cart-items {
+            margin-bottom: 10px;
+        }
+        .cart-total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .clear-cart {
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <div class="cart-total">
+            Total: $<span id="total-price">0</span>
+        </div>
+        <button class="clear-cart" id="clear-cart">Clear Cart</button>
+    </div>
+
+    <script>
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+
+            const cart = JSON.parse(localStorage.getItem('cart'));
+            let cartHTML = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                cartHTML += `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div>
+                            <p>${item.name} x${item.quantity}</p>
+                            <p>$${(item.price * item.quantity).toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+                totalPrice += item.price * item.quantity;
+            });
+
+            cartItemsContainer.innerHTML = cartHTML;
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        }
+
+
+        document.getElementById('clear-cart').addEventListener('click', function() {
+            localStorage.setItem('cart', JSON.stringify([]));  
+            updateCartUI();  
+        });
+
+        updateCartUI();
+    </script>
+
+</body>
+</html>
